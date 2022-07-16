@@ -2,12 +2,12 @@ import { Model, INTEGER, DECIMAL } from 'sequelize';
 import db from '.';
 import Usuario from './Usuario';
 
-class Conta extends Model {
+class ContaDoUsuario extends Model {
   usuarioId!: number;
   saldo!: number;
 }
 
-Conta.init({
+ContaDoUsuario.init({
   usuarioId: {
     type: INTEGER,
     allowNull: false,
@@ -19,11 +19,11 @@ Conta.init({
   },
 }, {
   sequelize: db,
-  modelName: 'Contas',
+  modelName: 'ContasDosUsuarios',
   timestamps: false,
 });
 
-Usuario.hasOne(Conta,  { foreignKey: 'usuarioId', as: 'id' })
-Conta.belongsTo(Usuario,  { foreignKey: 'usuarioId', as: 'id' })
+Usuario.hasOne(ContaDoUsuario,  { foreignKey: 'usuarioId', as: 'id' })
+ContaDoUsuario.belongsTo(Usuario,  { foreignKey: 'usuarioId', as: 'id' })
 
-export default Conta;
+export default ContaDoUsuario;
