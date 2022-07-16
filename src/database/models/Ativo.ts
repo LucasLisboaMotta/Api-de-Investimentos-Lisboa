@@ -4,6 +4,7 @@ import db from '.';
 
 class Ativo extends Model {
   id!: number;
+  sigla!: string;
   nome!: string;
   quantidade!: number;
   valor!: number;
@@ -16,11 +17,11 @@ Ativo.init({
     primaryKey: true,
     autoIncrement: true,
   },
-  nome: {
+  sigla: {
     type: STRING(100),
     allowNull: false,
   },
-  sobrenome: {
+  nome: {
     type: STRING(100),
     allowNull: false,
   },
