@@ -1,7 +1,5 @@
-'use strict';
-
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface) {
     await queryInterface.bulkInsert(
       'AtivosDosUsuarios',
       [
@@ -9,98 +7,98 @@ module.exports = {
           usuarioId: 1,
           ativoId: 1,
           quantidade: 100,
-          precoDeCompra: 2100
+          precoMedioDeCompra: 21,
         },
         {
           usuarioId: 1,
           ativoId: 2,
           quantidade: 10,
-          precoDeCompra: 280.5
+          precoMedioDeCompra: 28.05,
         },
         {
           usuarioId: 1,
           ativoId: 3,
           quantidade: 20,
-          precoDeCompra: 600
+          precoMedioDeCompra: 30,
         },
         {
           usuarioId: 2,
           ativoId: 1,
           quantidade: 100,
-          precoDeCompra: 2000
+          precoMedioDeCompra: 20,
         },
         {
           usuarioId: 2,
           ativoId: 4,
           quantidade: 100,
-          precoDeCompra: 2200
+          precoMedioDeCompra: 22,
         },
         {
           usuarioId: 2,
           ativoId: 5,
           quantidade: 50,
-          precoDeCompra: 850
+          precoMedioDeCompra: 17,
         },
         {
           usuarioId: 3,
           ativoId: 6,
           quantidade: 50,
-          precoDeCompra: 500
+          precoMedioDeCompra: 10,
         },
         {
           usuarioId: 3,
           ativoId: 7,
           quantidade: 5,
-          precoDeCompra: 500
+          precoMedioDeCompra: 100,
         },
         {
           usuarioId: 3,
           ativoId: 8,
           quantidade: 100,
-          precoDeCompra: 850
+          precoMedioDeCompra: 8.5,
         },
         {
           usuarioId: 4,
           ativoId: 9,
           quantidade: 10,
-          precoDeCompra: 90
+          precoMedioDeCompra: 9,
         },
         {
           usuarioId: 4,
           ativoId: 10,
           quantidade: 100,
-          precoDeCompra: 600
+          precoMedioDeCompra: 6,
         },
         {
           usuarioId: 4,
           ativoId: 1,
           quantidade: 400,
-          precoDeCompra: 7000
+          precoMedioDeCompra: 17.5,
         },
         {
           usuarioId: 4,
           ativoId: 2,
           quantidade: 10,
-          precoDeCompra: 300
+          precoMedioDeCompra: 30,
         },
         {
           usuarioId: 4,
           ativoId: 3,
           quantidade: 5,
-          precoDeCompra: 160
+          precoMedioDeCompra: 32,
         },
         {
           usuarioId: 4,
           ativoId: 4,
           quantidade: 20,
-          precoDeCompra: 40
+          precoMedioDeCompra: 2,
         },
       ],
       {},
     );
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.bulkDelete('AtivosDosUsuarios', null, {});
-  }
+  },
 };

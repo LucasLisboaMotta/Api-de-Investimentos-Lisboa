@@ -1,10 +1,5 @@
-'use strict';
-
-// usuarioId!: number;
-// saldo!: number;
-
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface) {
     await queryInterface.bulkInsert(
       'ContasDosUsuarios',
       [
@@ -26,14 +21,14 @@ module.exports = {
         },
         {
           usuarioId: 5,
-          saldo: 10.07,
+          saldo: 0,
         },
       ],
       {},
     );
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.bulkDelete('ContasDosUsuarios', null, {});
-  }
+  },
 };
