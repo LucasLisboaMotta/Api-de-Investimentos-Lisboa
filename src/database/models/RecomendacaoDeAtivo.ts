@@ -3,13 +3,13 @@ import db from '.';
 import Ativo from './Ativo';
 import Gerente from './Gerente';
 
-class Recomendacao extends Model {
+class RecomendacaoDeAtivo extends Model {
   gerenteId!: number;
   ativoId!: number;
   nota!: number;
 }
 
-Recomendacao.init({
+RecomendacaoDeAtivo.init({
   gerenteId: {
     type: INTEGER,
     allowNull: false,
@@ -28,14 +28,14 @@ Recomendacao.init({
   }
 }, {
   sequelize: db,
-  modelName: 'Recomendacoes',
+  modelName: 'RecomendacoesDeAtivos',
   timestamps: false,
 });
 
-Gerente.hasMany(Recomendacao,  { foreignKey: 'usuarioId', as: 'id' })
-Ativo.hasMany(Recomendacao,  { foreignKey: 'ativoId', as: 'id' })
+Gerente.hasMany(RecomendacaoDeAtivo,  { foreignKey: 'usuarioId', as: 'id' })
+Ativo.hasMany(RecomendacaoDeAtivo,  { foreignKey: 'ativoId', as: 'id' })
 
-Recomendacao.belongsTo(Gerente,  { foreignKey: 'usuarioId', as: 'id' })
-Recomendacao.belongsTo(Ativo,  { foreignKey: 'ativoId', as: 'id' })
+RecomendacaoDeAtivo.belongsTo(Gerente,  { foreignKey: 'usuarioId', as: 'id' })
+RecomendacaoDeAtivo.belongsTo(Ativo,  { foreignKey: 'ativoId', as: 'id' })
 
-export default Recomendacao;
+export default RecomendacaoDeAtivo;
