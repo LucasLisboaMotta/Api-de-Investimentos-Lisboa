@@ -1,5 +1,4 @@
-import { DECIMAL, NUMBER } from 'sequelize';
-import { Model, INTEGER } from 'sequelize';
+import { Model, INTEGER, DECIMAL, NUMBER } from 'sequelize';
 import db from '.';
 import Ativo from './Ativo';
 import Usuario from './Usuario';
