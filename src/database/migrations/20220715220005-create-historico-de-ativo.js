@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('HistoricoDeTransacoesDeAtivos', {
@@ -6,13 +5,13 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       usuarioId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Usuarios',
-          key: 'id'
+          key: 'id',
         },
         allowNull: false,
         onDelete: 'CASCADE',
@@ -22,7 +21,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Ativos',
-          key: 'id'
+          key: 'id',
         },
         allowNull: false,
         onDelete: 'CASCADE',
@@ -30,19 +29,23 @@ module.exports = {
       },
       quantidade: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       precoUnitario: {
         allowNull: false,
-        type: Sequelize.DECIMAL
+        type: Sequelize.DECIMAL(10, 2),
       },
       tipoDeTransacao: {
         allowNull: false,
-        type: Sequelize.STRING
-      }
+        type: Sequelize.STRING,
+      },
+      data: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('HistoricoDeTransacoesDeAtivos');
-  }
+  },
 };

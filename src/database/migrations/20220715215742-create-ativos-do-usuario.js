@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('AtivosDosUsuarios', {
@@ -6,34 +5,34 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'Usuarios',
-          key: 'id'
+          key: 'id',
         },
         allowNull: false,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
-        primaryKey: true
+        primaryKey: true,
       },
       ativoId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Ativos',
-          key: 'id'
+          key: 'id',
         },
         allowNull: false,
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE',
-        primaryKey: true
+        primaryKey: true,
       },
       quantidade: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
-      precoDeCompra: {
+      precoMedioDeCompra: {
         allowNull: false,
-        type: Sequelize.DECIMAL
+        type: Sequelize.DECIMAL(10, 2),
       },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('AtivosDosUsuarios');
-  }
+  },
 };
