@@ -1,4 +1,6 @@
-import { Model, INTEGER, DECIMAL, NUMBER } from 'sequelize';
+import {
+  Model, INTEGER, DECIMAL, NUMBER,
+} from 'sequelize';
 import db from '.';
 import Ativo from './Ativo';
 import Usuario from './Usuario';
@@ -7,7 +9,7 @@ class AtivosDoUsuario extends Model {
   usuarioId!: number;
   ativoId!: number;
   quantidade!: number;
-  precoDeCompra!: number;
+  precoMedioDeCompra!: number;
 }
 
 AtivosDoUsuario.init({
@@ -15,7 +17,6 @@ AtivosDoUsuario.init({
     type: INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
   },
   ativoId: {
     type: INTEGER,
@@ -27,7 +28,7 @@ AtivosDoUsuario.init({
     type: NUMBER,
     allowNull: false,
   },
-  precoDeCompra: {
+  precoMedioDeCompra: {
     type: DECIMAL(10, 2),
     allowNull: false,
   },
@@ -37,10 +38,14 @@ AtivosDoUsuario.init({
   timestamps: false,
 });
 
-Usuario.hasOne(AtivosDoUsuario,  { foreignKey: 'usuarioId', as: 'id' })
-Ativo.hasOne(AtivosDoUsuario,  { foreignKey: 'ativoId', as: 'id' })
+AtivosDoUsuario.belongsToMany(Usuario, {
+  foreignKey: 'usuarioId', as: 'Usuarios', through: AtivosDoUsuario, otherKey: 'ativoId',
+});
+AtivosDoUsuario.belongsToMany(Ativo, {
+  foreignKey: 'ativoId', as: 'Ativos', through: AtivosDoUsuario, otherKey: 'usuarioId',
+});
 
-AtivosDoUsuario.belongsTo(Usuario,  { foreignKey: 'usuarioId', as: 'id' })
-AtivosDoUsuario.belongsTo(Ativo,  { foreignKey: 'ativoId', as: 'id' })
+Usuario.hasMany(AtivosDoUsuario, { foreignKey: 'usuarioId', as: 'AtivosDosUsuarios' });
+Ativo.hasMany(AtivosDoUsuario, { foreignKey: 'ativoId', as: 'AtivosDosUsuarios' });
 
 export default AtivosDoUsuario;

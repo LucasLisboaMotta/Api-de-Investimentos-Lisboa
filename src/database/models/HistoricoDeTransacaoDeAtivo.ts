@@ -1,4 +1,6 @@
-import { Model, INTEGER, STRING, DECIMAL } from 'sequelize';
+import {
+  DATE, Model, INTEGER, STRING, DECIMAL,
+} from 'sequelize';
 import db from '.';
 import Ativo from './Ativo';
 import Usuario from './Usuario';
@@ -10,6 +12,7 @@ class HistoricoDeTransacaoDeAtivo extends Model {
   quantidade!: number;
   precoUnitario!: number;
   tipoDeTransacao!: string;
+  data!: Date;
 }
 
 HistoricoDeTransacaoDeAtivo.init({
@@ -39,16 +42,24 @@ HistoricoDeTransacaoDeAtivo.init({
     type: STRING(100),
     allowNull: false,
   },
+  data: {
+    type: DATE,
+    allowNull: false,
+  },
 }, {
   sequelize: db,
   modelName: 'HistoricoDeTransacoesDeAtivos',
-  timestamps: false});
+  timestamps: false,
+});
 
-Usuario.hasMany(HistoricoDeTransacaoDeAtivo,  { foreignKey: 'usuarioId', as: 'id' })
-Ativo.hasMany(HistoricoDeTransacaoDeAtivo,  { foreignKey: 'ativoId', as: 'id' })
-  
-HistoricoDeTransacaoDeAtivo.belongsTo(Usuario,  { foreignKey: 'usuarioId', as: 'id' })
-HistoricoDeTransacaoDeAtivo.belongsTo(Ativo,  { foreignKey: 'ativoId', as: 'id' })
-  
+HistoricoDeTransacaoDeAtivo.belongsToMany(Usuario, {
+  foreignKey: 'usuarioId', as: 'Usuarios', through: HistoricoDeTransacaoDeAtivo, otherKey: 'ativoId',
+});
+HistoricoDeTransacaoDeAtivo.belongsToMany(Ativo, {
+  foreignKey: 'ativoId', as: 'Ativos', through: HistoricoDeTransacaoDeAtivo, otherKey: 'usuarioId',
+});
+
+Usuario.hasMany(HistoricoDeTransacaoDeAtivo, { foreignKey: 'usuarioId', as: 'HistoricoDeTransacoesDeAtivo' });
+Ativo.hasMany(HistoricoDeTransacaoDeAtivo, { foreignKey: 'ativoId', as: 'HistoricoDeTransacoesDeAtivo' });
 
 export default HistoricoDeTransacaoDeAtivo;

@@ -23,7 +23,7 @@ ContaDoUsuario.init({
   timestamps: false,
 });
 
-Usuario.hasOne(ContaDoUsuario,  { foreignKey: 'usuarioId', as: 'id' })
-ContaDoUsuario.belongsTo(Usuario,  { foreignKey: 'usuarioId', as: 'id' })
+ContaDoUsuario.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'Usuarios' });
+Usuario.hasOne(ContaDoUsuario, { foreignKey: 'usuarioId', as: 'ContasDosUsuarios' });
 
 export default ContaDoUsuario;

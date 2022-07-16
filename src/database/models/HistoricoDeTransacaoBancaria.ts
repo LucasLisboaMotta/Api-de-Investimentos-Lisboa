@@ -1,5 +1,6 @@
-import { DATE } from 'sequelize';
-import { Model, INTEGER, STRING, DECIMAL } from 'sequelize';
+import {
+  DATE, Model, INTEGER, STRING, DECIMAL,
+} from 'sequelize';
 import db from '.';
 import Usuario from './Usuario';
 
@@ -36,11 +37,11 @@ HistoricoDeTransacaoBancaria.init({
   },
 }, {
   sequelize: db,
-  modelName: 'HistoricoDeTransacoesDeAtivos',
-  timestamps: false
+  modelName: 'HistoricoDeTransacoesBancarias',
+  timestamps: false,
 });
 
-Usuario.hasMany(HistoricoDeTransacaoBancaria,  { foreignKey: 'usuarioId', as: 'id' })
-HistoricoDeTransacaoBancaria.belongsTo(Usuario,  { foreignKey: 'usuarioId', as: 'id' })
-  
+Usuario.hasMany(HistoricoDeTransacaoBancaria, { foreignKey: 'usuarioId', as: 'Usuarios' });
+HistoricoDeTransacaoBancaria.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'Usuarios' });
+
 export default HistoricoDeTransacaoBancaria;

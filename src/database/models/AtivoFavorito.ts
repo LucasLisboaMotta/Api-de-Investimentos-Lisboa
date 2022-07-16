@@ -1,7 +1,7 @@
 import { Model, INTEGER } from 'sequelize';
-import db from '.';
 import Ativo from './Ativo';
 import Usuario from './Usuario';
+import db from '.';
 
 class AtivoFavorito extends Model {
   usuarioId!: number;
@@ -13,13 +13,11 @@ AtivoFavorito.init({
     type: INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
   },
   ativoId: {
     type: INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
   },
 }, {
   sequelize: db,
@@ -27,10 +25,14 @@ AtivoFavorito.init({
   timestamps: false,
 });
 
-Usuario.hasMany(AtivoFavorito,  { foreignKey: 'usuarioId', as: 'id' })
-Ativo.hasMany(AtivoFavorito,  { foreignKey: 'ativoId', as: 'id' })
+AtivoFavorito.belongsToMany(Usuario, {
+  foreignKey: 'usuarioId', as: 'Usuarios', through: AtivoFavorito, otherKey: 'ativoId',
+});
+AtivoFavorito.belongsToMany(Ativo, {
+  foreignKey: 'ativoId', as: 'Ativos', through: AtivoFavorito, otherKey: 'usuarioId',
+});
 
-AtivoFavorito.belongsTo(Usuario,  { foreignKey: 'usuarioId', as: 'id' })
-AtivoFavorito.belongsTo(Ativo,  { foreignKey: 'ativoId', as: 'id' })
+Usuario.hasMany(AtivoFavorito, { foreignKey: 'usuarioId', as: 'AtivosFavoritos' });
+Ativo.hasMany(AtivoFavorito, { foreignKey: 'ativoId', as: 'AtivosFavoritos' });
 
 export default AtivoFavorito;

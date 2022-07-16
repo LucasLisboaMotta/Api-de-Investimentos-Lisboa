@@ -14,28 +14,30 @@ RecomendacaoDeAtivo.init({
     type: INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
   },
   ativoId: {
     type: INTEGER,
     allowNull: false,
     primaryKey: true,
-    autoIncrement: true,
   },
   nota: {
     type: DECIMAL(10, 2),
-    allowNull: false
-  }
+    allowNull: false,
+  },
 }, {
   sequelize: db,
   modelName: 'RecomendacoesDeAtivos',
   timestamps: false,
 });
 
-Gerente.hasMany(RecomendacaoDeAtivo,  { foreignKey: 'usuarioId', as: 'id' })
-Ativo.hasMany(RecomendacaoDeAtivo,  { foreignKey: 'ativoId', as: 'id' })
+RecomendacaoDeAtivo.belongsToMany(Gerente, {
+  foreignKey: 'gerenteId', as: 'Gerentes', through: RecomendacaoDeAtivo, otherKey: 'ativoId',
+});
+RecomendacaoDeAtivo.belongsToMany(Ativo, {
+  foreignKey: 'ativoId', as: 'Ativos', through: RecomendacaoDeAtivo, otherKey: 'gerenteId',
+});
 
-RecomendacaoDeAtivo.belongsTo(Gerente,  { foreignKey: 'usuarioId', as: 'id' })
-RecomendacaoDeAtivo.belongsTo(Ativo,  { foreignKey: 'ativoId', as: 'id' })
+Gerente.hasMany(RecomendacaoDeAtivo, { foreignKey: 'gerenteId', as: 'RecomendacoesDeAtivos' });
+Ativo.hasMany(RecomendacaoDeAtivo, { foreignKey: 'ativoId', as: 'RecomendacoesDeAtivos' });
 
 export default RecomendacaoDeAtivo;

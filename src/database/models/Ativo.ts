@@ -1,5 +1,6 @@
-import { DECIMAL, NUMBER } from 'sequelize';
-import { Model, INTEGER, STRING } from 'sequelize';
+import {
+  Model, INTEGER, STRING, DECIMAL,
+} from 'sequelize';
 import db from '.';
 
 class Ativo extends Model {
@@ -26,7 +27,7 @@ Ativo.init({
     allowNull: false,
   },
   quantidade: {
-    type: NUMBER,
+    type: INTEGER,
     allowNull: false,
   },
   valor: {

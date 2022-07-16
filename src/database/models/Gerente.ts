@@ -35,6 +35,7 @@ Gerente.init({
 }, {
   sequelize: db,
   modelName: 'Gerentes',
-  timestamps: false});
+  timestamps: false,
+});
 
 export default Gerente;
