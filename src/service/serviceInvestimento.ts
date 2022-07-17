@@ -1,10 +1,40 @@
 import ErroPersonalizado from '../auxiliares/ErroPersonalizado';
+import operacoesBancarias from '../auxiliares/operacoesBancarias';
 import { decodificaToken } from '../auxiliares/token';
 import Ativo from '../database/models/Ativo';
 import AtivosDoUsuario from '../database/models/AtivosDoUsuario';
 import ContaDoUsuario from '../database/models/ContaDoUsuario';
-import HistoricoDeTransacaoBancaria from '../database/models/HistoricoDeTransacaoBancaria';
 import HistoricoDeTransacaoDeAtivo from '../database/models/HistoricoDeTransacaoDeAtivo';
+
+const compraAivo = async (
+  usuarioId: number,
+  ativoId: number,
+  valor: number,
+  quantidade: number,
+) => {
+  const valorTotal = quantidade * valor;
+  const ativosDoUsuario = await AtivosDoUsuario.findOne({ where: { usuarioId, ativoId } });
+  if (ativosDoUsuario === null) {
+    await AtivosDoUsuario.create({
+      usuarioId, ativoId, quantidade, precoMedioDeCompra: valor,
+    });
+  } else {
+    const novaQuantidade = quantidade + ativosDoUsuario.quantidade;
+    const precoMedioDeCompra = ((
+      (ativosDoUsuario.quantidade * ativosDoUsuario.precoMedioDeCompra)
+      + valorTotal)
+      / novaQuantidade
+    );
+    await AtivosDoUsuario.update({
+      quantidade: novaQuantidade,
+      precoMedioDeCompra,
+    }, { where: { usuarioId, ativoId } });
+  }
+  await Ativo.decrement({ quantidade }, { where: { id: ativoId } });
+  await HistoricoDeTransacaoDeAtivo.create({
+    usuarioId, ativoId, quantidade, data: Date.now(), tipoDeTransacao: 'Compra', precoUnitario: valor,
+  });
+};
 
 type IinvestimentoCompra = { codAtivo: number, qtdeAtivo: number};
 export const investimentoCompraService = async (
@@ -18,49 +48,7 @@ export const investimentoCompraService = async (
   const conta = await ContaDoUsuario.findOne({ where: { usuarioId: usuario.id } });
   const valorTotal = qtdeAtivo * ativo.valor;
   if (Number(conta.saldo) < valorTotal) throw new ErroPersonalizado(422, 'Saldo insuficiente');
-  const ativosDoUsuario = await AtivosDoUsuario.findOne({
-    where: { usuarioId: usuario.id, ativoId: codAtivo },
-  });
-  if (ativosDoUsuario === null) {
-    await AtivosDoUsuario.create({
-      usuarioId: usuario.id,
-      ativoId: codAtivo,
-      quantidade: qtdeAtivo,
-      precoMedioDeCompra: ativo.valor,
-    });
-  } else {
-    const quantidade = qtdeAtivo + ativosDoUsuario.quantidade;
-    const precoMedioDeCompra = ((
-      (ativosDoUsuario.quantidade * ativosDoUsuario.precoMedioDeCompra) + valorTotal) / quantidade);
-    await AtivosDoUsuario.update({
-      quantidade,
-      precoMedioDeCompra,
-    }, { where: { usuarioId: usuario.id, ativoId: codAtivo } });
-  }
-  await Ativo.update({ quantidade: ativo.quantidade - qtdeAtivo }, { where: { id: codAtivo } });
-  await ContaDoUsuario.update(
-    { saldo: conta.saldo - valorTotal },
-    { where: { usuarioId: usuario.id } },
-  );
-  await HistoricoDeTransacaoBancaria.create({
-    usuarioId: usuario.id,
-    valor: valorTotal,
-    data: Date.now(),
-    tipo: 'Compra',
-  });
-  await HistoricoDeTransacaoDeAtivo.create({
-    usuarioId: usuario.id,
-    ativoId: codAtivo,
-    quantidade: qtdeAtivo,
-    data: Date.now(),
-    tipoDeTransacao: 'Compra',
-    precoUnitario: ativo.valor,
-  });
-
-  return {
-    codAtivo,
-    qtdeAtivo,
-    valorAtivo: ativo.valor,
-    valorTotalDaCOmpra: valorTotal,
-  };
+  await compraAivo(usuario.id, codAtivo, ativo.valor, qtdeAtivo);
+  await operacoesBancarias((valorTotal * -1), 'Compra', usuario.id);
+  return { codAtivo, qtdeAtivo, valor: ativo.valor };
 };
