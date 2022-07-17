@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import jwt, { SignOptions } from 'jsonwebtoken';
+import ErroPersonalizado from './ErroPersonalizado';
 
 const segredoUsuario = String(process.env.SECRET);
 const segredoGerente = String(process.env.MANAGERSECRET);
@@ -12,12 +13,13 @@ export const criandoToken = (payload: Ipayload, gerente: boolean) => {
   return token;
 };
 
-export const verificandoToken = (token: string, gerente: boolean) => {
+export const decodificaToken = (token: string, gerente: boolean) => {
   const segredo = gerente ? segredoGerente : segredoUsuario;
-  jwt.verify(token, segredo, configuracao);
-};
-
-export const decodificandoToken = (token: string) => {
+  try {
+    jwt.verify(token, segredo, configuracao);
+  } catch {
+    throw new ErroPersonalizado(401, 'Token expirado ou invalido');
+  }
   const payload = jwt.decode(token);
   return payload as Ipayload;
 };
