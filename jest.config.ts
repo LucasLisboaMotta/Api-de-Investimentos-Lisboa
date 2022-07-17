@@ -3,4 +3,5 @@ export default {
   rootDir: './tests',
   testRegex: './*\\.test\\.ts$',
   testTimeout: 180000,
+  maxWorkers: 1,
 };
