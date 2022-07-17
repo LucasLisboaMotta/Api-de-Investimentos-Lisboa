@@ -24,8 +24,8 @@ import tabelaRecomendacao from './auxiliares/recomendacoes';
 
 describe('Testando retorno das models', () => {
   beforeAll(async() => {
-    await shell.exec('npm run db:reset')
-  })
+    await shell.exec('npm run db:reset');
+  });
   test('Testando tabela Usuarios', async () => {
     const retornoModelUsuario = await Usuario.findAll();
     tabelaUsuario.forEach(({nome, sobrenome, email, senha}, index) => {
