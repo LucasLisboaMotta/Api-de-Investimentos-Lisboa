@@ -41,7 +41,7 @@ HistoricoDeTransacaoBancaria.init({
   timestamps: false,
 });
 
-Usuario.hasMany(HistoricoDeTransacaoBancaria, { foreignKey: 'usuarioId', as: 'Usuarios' });
+Usuario.hasMany(HistoricoDeTransacaoBancaria, { foreignKey: 'usuarioId', as: 'HistoricoDeTransacoesBancarias' });
 HistoricoDeTransacaoBancaria.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'Usuarios' });
 
 export default HistoricoDeTransacaoBancaria;
