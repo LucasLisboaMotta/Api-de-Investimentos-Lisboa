@@ -1,0 +1,148 @@
+const historicoBancario = [
+  {
+    usuarioId: 1,
+    valor: '3281.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Deposito',
+  },
+  {
+    usuarioId: 1,
+    valor: '2100.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 1,
+    valor: '580.00',
+    data: new Date(2022, 5, 11),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 1,
+    valor: '299.50',
+    data: new Date(2022, 5, 12),
+    tipo: 'Venda',
+  },
+  {
+    usuarioId: 1,
+    valor: '600.00',
+    data: new Date(2022, 5, 13),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 2,
+    valor: '8550.10',
+    data: new Date(2022, 5, 20),
+    tipo: 'Deposito',
+  },
+  {
+    usuarioId: 2,
+    valor: '2000.00',
+    data: new Date(2022, 5, 20),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 2,
+    valor: '1000.00',
+    data: new Date(2022, 5, 25),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 2,
+    valor: '1200.00',
+    data: new Date(2022, 5, 29),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 2,
+    valor: '850.00',
+    data: new Date(2022, 5, 30),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 2,
+    valor: '1500.00',
+    data: new Date(2022, 6, 1),
+    tipo: 'Saque',
+  },
+  {
+    usuarioId: 3,
+    valor: '1800.50',
+    data: new Date(2022, 5, 29),
+    tipo: 'Deposito',
+  },
+  {
+    usuarioId: 3,
+    valor: '500.00',
+    data: new Date(2022, 5, 30),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 3,
+    valor: '50.00',
+    data: new Date(2022, 6, 1),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 3,
+    valor: '850.00',
+    data: new Date(2022, 6, 2),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 4,
+    valor: '20000.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Deposito',
+  },
+  {
+    usuarioId: 4,
+    valor: '900.00',
+    data: new Date(2022, 6, 3),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 4,
+    valor: '900.00',
+    data: new Date(2022, 6, 3),
+    tipo: 'Venda',
+  },
+  {
+    usuarioId: 4,
+    valor: '600.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 4,
+    valor: '7000.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 4,
+    valor: '300.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 4,
+    valor: '160.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 4,
+    valor: '40.00',
+    data: new Date(2022, 5, 10),
+    tipo: 'Compra',
+  },
+  {
+    usuarioId: 4,
+    valor: '6900.00',
+    data: new Date(2022, 5, 15),
+    tipo: 'Saque',
+  },
+];
+
+export default historicoBancario;
