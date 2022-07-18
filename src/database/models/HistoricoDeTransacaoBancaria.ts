@@ -24,7 +24,7 @@ HistoricoDeTransacaoBancaria.init({
     allowNull: false,
   },
   valor: {
-    type: DECIMAL(20, 2),
+    type: DECIMAL(10, 2),
     allowNull: false,
   },
   data: {
