@@ -11,7 +11,7 @@ const login = Joi.object().keys({
     }),
   nome: Joi.string().min(3).required()
     .messages({
-      'string.min': 'O campo "nome" deve ter no minimo 6 caracteres',
+      'string.min': 'O campo "nome" deve ter no minimo 3 caracteres',
       'any.required': 'O campo "nome" é obrigatorio',
     }),
   quantidade: Joi.number().min(1).integer().required()
@@ -22,8 +22,9 @@ const login = Joi.object().keys({
     }),
   valor: Joi.number().min(0.01).required()
     .messages({
-      'number.min': 'O campor "valor" esta invalido',
+      'number.min': 'O campo "valor" esta invalido',
       'any.required': 'O campo "valor" é obrigatorio',
+      'number.base': 'O campo "valor" é obrigatorio',
     }),
 });
 
