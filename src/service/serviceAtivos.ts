@@ -26,3 +26,12 @@ export const retornaAtivoPeloIdService = async (token:string, id: number) => {
   if (ativo === null) throw new ErroPersonalizado(400, 'Ativo não encontrado');
   return ativo;
 };
+
+type ativoType = { sigla: string, nome: string, quantidade: number, valor: string }
+export const criarNovoAtivoService = async (token: string, novoAtivo: ativoType) => {
+  decodificaToken(token, true);
+  const verificaAtivo = await Ativo.findOne({ where: { sigla: novoAtivo.sigla } });
+  if (verificaAtivo !== null) throw new ErroPersonalizado(400, 'Ativo ja existente');
+  const ativo = Ativo.create(novoAtivo);
+  return ativo;
+};
