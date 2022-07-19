@@ -23,3 +23,11 @@ export const decodificaToken = (token: string, gerente: boolean) => {
   const payload = jwt.decode(token);
   return payload as Ipayload;
 };
+
+export const verificaToken = (token: string) => {
+  try {
+    decodificaToken(token, true);
+  } catch {
+    decodificaToken(token, false);
+  }
+};
