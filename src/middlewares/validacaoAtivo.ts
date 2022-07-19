@@ -28,6 +28,7 @@ const login = Joi.object().keys({
 });
 
 const validacaoAtivos = (req: Request, _res: Response, next: NextFunction) => {
+  req.body.valor = Number(req.body.valor);
   const { error } = login.validate(req.body);
   if (error) throw new ErroPersonalizado(400, error.message);
   req.body.sigla = req.body.sigla.toUpperCase();
