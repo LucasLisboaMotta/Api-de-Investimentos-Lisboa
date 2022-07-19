@@ -14,7 +14,7 @@ ContaDoUsuario.init({
     primaryKey: true,
   },
   saldo: {
-    type: DECIMAL(20, 2),
+    type: DECIMAL(10, 2),
     allowNull: false,
   },
 }, {
@@ -23,7 +23,7 @@ ContaDoUsuario.init({
   timestamps: false,
 });
 
-ContaDoUsuario.belongsTo(Usuario, { foreignKey: 'usuarioId', as: 'Usuarios' });
-Usuario.hasOne(ContaDoUsuario, { foreignKey: 'usuarioId', as: 'ContasDosUsuarios' });
+ContaDoUsuario.belongsTo(Usuario);
+Usuario.hasOne(ContaDoUsuario);
 
 export default ContaDoUsuario;

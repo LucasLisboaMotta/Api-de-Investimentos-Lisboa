@@ -32,7 +32,7 @@ GerenteDeUsuario.belongsToMany(Usuario, {
   foreignKey: 'usuarioId', as: 'Usuarios', through: GerenteDeUsuario, otherKey: 'gerenteId',
 });
 
-Gerente.hasMany(GerenteDeUsuario, { foreignKey: 'gerenteId', as: 'GerenteDeUsuarios' });
-Usuario.hasOne(GerenteDeUsuario, { foreignKey: 'usuarioId', as: 'GerenteDeUsuarios' });
+Gerente.hasMany(GerenteDeUsuario, { foreignKey: 'gerenteId' });
+Usuario.hasOne(GerenteDeUsuario, { foreignKey: 'usuarioId' });
 
 export default GerenteDeUsuario;
