@@ -28,7 +28,8 @@ describe('Testando retorno das models', () => {
   });
   test('Testando tabela Usuarios', async () => {
     const retornoModelUsuario = await Usuario.findAll();
-    tabelaUsuario.forEach(({nome, sobrenome, email, senha}, index) => {
+    tabelaUsuario.forEach(({nome, sobrenome, email, senha, id}, index) => {
+      expect(retornoModelUsuario[index].id).toEqual(id)
       expect(retornoModelUsuario[index].nome).toEqual(nome);
       expect(retornoModelUsuario[index].sobrenome).toEqual(sobrenome);
       expect(retornoModelUsuario[index].email).toEqual(email);
@@ -46,7 +47,8 @@ describe('Testando retorno das models', () => {
 
   test('Testando tabela Gerentes', async () => {
     const retornoModelGerente = await Gerente.findAll();
-    tabelaGerentes.forEach(({nome, sobrenome, email, senha}, index) => {
+    tabelaGerentes.forEach(({nome, sobrenome, email, senha, id}, index) => {
+      expect(retornoModelGerente[index].id).toEqual(id)
       expect(retornoModelGerente[index].nome).toEqual(nome);
       expect(retornoModelGerente[index].sobrenome).toEqual(sobrenome);
       expect(retornoModelGerente[index].email).toEqual(email);
@@ -69,7 +71,8 @@ describe('Testando retorno das models', () => {
 
   test('Testando tabela Ativos', async () => {
     const retornoModelAtivo = await Ativo.findAll();
-    tabelaAtivos.forEach(({ sigla, nome, quantidade, valor }, index) => {
+    tabelaAtivos.forEach(({ sigla, nome, quantidade, valor, id }, index) => {
+      expect(retornoModelAtivo[index].id).toEqual(id);
       expect(retornoModelAtivo[index].sigla).toEqual(sigla);
       expect(retornoModelAtivo[index].nome).toEqual(nome);
       expect(retornoModelAtivo[index].quantidade).toEqual(quantidade);
