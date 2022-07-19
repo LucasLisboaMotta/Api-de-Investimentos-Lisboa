@@ -16,12 +16,11 @@ export const retornarTodosAtivosService = async (token: string) => {
 export const retornaAtivosDoUsuarioService = async (token: string) => {
   const usuario = decodificaToken(token, false);
   const ativosDoUsuario = await AtivosDoUsuario.findAll({ where: { usuarioId: usuario.id } });
-  const ativos = Promise.all(ativosDoUsuario
-    .map(async ({ ativoId, quantidade, precoMedioDeCompra }) => {
-      const ativo = await Ativo.findOne({ where: { id: ativoId } });
-      return { ativo, quantidade, precoMedioDeCompra };
-    }));
-  return ativos;
+  const ativos = ativosDoUsuario.map(async ({ ativoId, quantidade, precoMedioDeCompra }) => {
+    const ativo = await Ativo.findOne({ where: { id: ativoId } });
+    return { ativo, quantidade, precoMedioDeCompra };
+  });
+  return Promise.all(ativos);
 };
 
 export const retornaAtivoPeloIdService = async (token:string, id: number) => {
@@ -35,7 +34,7 @@ type ativoType = { sigla: string, nome: string, quantidade: number, valor: strin
 export const criarNovoAtivoService = async (token: string, novoAtivo: ativoType) => {
   decodificaToken(token, true);
   const verificaAtivo = await Ativo.findOne({ where: { sigla: novoAtivo.sigla } });
-  if (verificaAtivo !== null) throw new ErroPersonalizado(400, 'Ativo ja existente');
+  if (verificaAtivo !== null) throw new ErroPersonalizado(400, 'Sigla já existente');
   const ativo = Ativo.create(novoAtivo);
   return ativo;
 };
@@ -44,8 +43,14 @@ export const atualizarAtivoService = async (token: string, id: number, ativo: at
   decodificaToken(token, true);
   const verificarAtivo = await Ativo.findOne({ where: { id } });
   if (verificarAtivo === null) throw new ErroPersonalizado(400, 'Ativo não encontrado');
-  const ativoAtualizado = await Ativo.update(ativo, { where: { id } });
-  return ativoAtualizado;
+  await Ativo.update(ativo, { where: { id } });
+  return {
+    id,
+    sigla: ativo.sigla,
+    nome: ativo.nome,
+    quantidade: ativo.quantidade,
+    valor: ativo.valor,
+  };
 };
 
 export const ativosRecomendadosService = async (token: string) => {
@@ -95,6 +100,8 @@ export const ativosFavoritosService = async (token: string) => {
 
 export const favoritarAtivoService = async (token: string, ativoId: number) => {
   const usuario = decodificaToken(token, false);
+  const verificarAtivo = await Ativo.findOne({ where: { id: ativoId } });
+  if (verificarAtivo === null) throw new ErroPersonalizado(400, 'Ativo não encontrado');
   const favorito = await AtivoFavorito.findOne({ where: { usuarioId: usuario.id, ativoId } });
   if (favorito === null) await AtivoFavorito.create({ ativoId, usuarioId: usuario.id });
   else await AtivoFavorito.destroy({ where: { usuarioId: usuario.id, ativoId } });
