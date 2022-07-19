@@ -69,6 +69,20 @@ describe('Testando rota post "/investimentos/comprar"', () => {
     expect(historicoBancario?.tipo).toEqual('Compra');
   });
 
+  test('Testando compra com sucesso, e atualizando o preço medio dos ativos', async () => {
+    const { body: {token}} = await request(rotas).post('/login/usuario').send({
+      email: 'luisaalvez@uol.com',
+      senha: '11223344',
+    });
+    await request(rotas).post('/investimentos/comprar').send({
+      codAtivo: 4,
+      qtdeAtivo: 200
+    }).set({ Authorization: token });
+    const ativoDoUsuario = await AtivosDoUsuario.findOne({where: {usuarioId: 4, ativoId: 4}});
+    expect(ativoDoUsuario?.quantidade).toEqual(220);
+    expect(ativoDoUsuario?.precoMedioDeCompra).toEqual('2.71');
+  })
+
   test('Testando compra com falha no token', async () => {
     const token = '123456789123456789123456789';
     const {status, body: { message }} = await request(rotas).post('/investimentos/comprar').send({
@@ -185,6 +199,20 @@ describe('Testando rota post "/investimentos/vender"', () => {
     expect(historicoBancario?.valor).toEqual('1741.60');
     expect(historicoBancario?.tipo).toEqual('Venda');
   });
+
+  test('Testando vender todas as unidades de determinado ativo', async () => {
+    const { body: {token}} = await request(rotas).post('/login/usuario').send({
+      email: 'joaosilva@gmail.com',
+      senha: '12345678',
+    });
+    await request(rotas).post('/investimentos/vender').send({
+      codAtivo: 1,
+      qtdeAtivo: 100
+      }).set({ Authorization: token });
+
+      const ativoDoUsuario = await AtivosDoUsuario.findOne({where: {usuarioId: 1, ativoId: 1}});
+      expect(ativoDoUsuario).toEqual(null);
+  })
 
   test('Testando vender com falha no token', async () => {
     const token = '123456789123456789123456789';
