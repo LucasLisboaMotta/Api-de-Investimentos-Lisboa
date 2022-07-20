@@ -15,3 +15,13 @@ export const loginUsuarioService = async ({ email, senha }: IloginUsuarioService
   const token = criandoToken(novoUsuario, false);
   return { token };
 };
+
+export const pegarContaService = async (token: string) => {
+  const { id } = decodificaToken(token, false);
+  const usuario = await Usuario.findOne({ where: { id } });
+  if (usuario === null) throw new ErroPersonalizado(400, 'Usuario não encontrado');
+  const conta = await ContaDoUsuario.findOne({ where: { usuarioId: id } });
+  return {
+    id, nome: usuario.nome, sobrenome: usuario.sobrenome, email: usuario.email, saldo: conta?.saldo,
+  };
+};
