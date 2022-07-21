@@ -55,3 +55,18 @@ export const criarContaService = async ({
   const token = criandoToken(novoUsuario, false);
   return { token };
 };
+
+type editarContaTyper = { nome: string, sobrenome: string, senha: string }
+export const editarContaService = async (
+  token: string,
+  { nome, sobrenome, senha }: editarContaTyper,
+) => {
+  const { id, email } = decodificaToken(token, false);
+  await Usuario.update({ nome, sobrenome, senha }, { where: { id } });
+  const novoUsuario = {
+    id, nome, sobrenome, email,
+  };
+  const novoToken = criandoToken(novoUsuario, false);
+  return { token: novoToken };
+};
+
