@@ -3,6 +3,7 @@ import ErroPersonalizado from '../auxiliares/ErroPersonalizado';
 import { criandoToken, decodificaToken } from '../auxiliares/token';
 import GerenteDeUsuario from '../database/models/GerenteDeUsuario';
 import RecomendacaoDeAtivo from '../database/models/RecomendacaoDeAtivo';
+import Usuario from '../database/models/Usuario';
 
 type IloginGerenteService = {email: string, senha: string}
 export const loginGerenteService = async ({ email, senha }: IloginGerenteService) => {
@@ -78,4 +79,12 @@ export const gerenciarUsuarioService = async (token: string, usuarioId: number) 
   if (gerenteUsuario !== null && gerenteUsuario.gerenteId !== id) throw new ErroPersonalizado(400, 'Usuario já possui um gerente');
   if (gerenteUsuario === null) await GerenteDeUsuario.create({ gerenteId: id, usuarioId });
   else await GerenteDeUsuario.destroy({ where: { gerenteId: id, usuarioId } });
+};
+
+export const usuariosDoGerenteService = async (token: string) => {
+  const { id } = decodificaToken(token, true);
+  const usuariosIds = await GerenteDeUsuario.findAll({ where: { gerenteId: id } });
+  const usuarios = usuariosIds.map(({ usuarioId }) => Usuario
+    .findOne({ where: { id: usuarioId }, attributes: { exclude: ['senha'] } }));
+  return Promise.all(usuarios);
 };
