@@ -6,6 +6,7 @@ import {
   gerenciarUsuarioService,
   loginGerenteService,
   pegarContaService,
+  usuariosDoGerentePeloIdService,
   usuariosDoGerenteService,
 } from '../service/serviceGerente';
 
@@ -48,5 +49,12 @@ export const gerenciarUsuarioController = async (req: Request, res: Response) =>
 export const usuariosDoGerenteController = async (req: Request, res: Response) => {
   const token = req.headers.authorization as string;
   const resposta = await usuariosDoGerenteService(token);
+  return res.status(200).json(resposta);
+};
+
+export const usuariosDoGerentePeloIdController = async (req: Request, res: Response) => {
+  const token = req.headers.authorization as string;
+  const id = Number(req.params.id);
+  const resposta = await usuariosDoGerentePeloIdService(token, id);
   return res.status(200).json(resposta);
 };

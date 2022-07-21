@@ -88,3 +88,12 @@ export const usuariosDoGerenteService = async (token: string) => {
     .findOne({ where: { id: usuarioId }, attributes: { exclude: ['senha'] } }));
   return Promise.all(usuarios);
 };
+
+export const usuariosDoGerentePeloIdService = async (token: string, usuarioId: number) => {
+  const { id } = decodificaToken(token, true);
+  const relacaoUsuarioGerente = await GerenteDeUsuario
+    .findOne({ where: { gerenteId: id, usuarioId } });
+  if (relacaoUsuarioGerente === null) throw new ErroPersonalizado(400, 'Este usuario não é gerenciado por este gerente');
+  const usuarios = Usuario.findOne({ where: { id: usuarioId }, attributes: { exclude: ['senha'] } });
+  return usuarios;
+};

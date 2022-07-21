@@ -6,6 +6,7 @@ import {
   gerenciarUsuarioController,
   pegarContaController,
   usuariosDoGerenteController,
+  usuariosDoGerentePeloIdController,
 } from '../controllers/controllerGerente';
 
 import validacaoConta from '../middlewares/validacaoConta';
@@ -15,6 +16,7 @@ const gerentes = express();
 
 gerentes.get('/', pegarContaController);
 gerentes.get('/conta', usuariosDoGerenteController);
+gerentes.get('/conta/:id', usuariosDoGerentePeloIdController);
 
 gerentes.post('/', validacaoConta, criarContaController);
 gerentes.post('/usuario/:id', gerenciarUsuarioController);
