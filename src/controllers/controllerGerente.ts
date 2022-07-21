@@ -17,3 +17,9 @@ export const criarContaController = async (req: Request, res: Response) => {
   const resposta = await criarContaService(token, req.body);
   return res.status(201).json(resposta);
 };
+
+export const editarContaController = async (req: Request, res: Response) => {
+  const token = req.headers.authorization as string;
+  const resposta = await editarContaService(token, req.body);
+  return res.status(200).json(resposta);
+};
