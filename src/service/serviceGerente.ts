@@ -4,6 +4,8 @@ import { criandoToken, decodificaToken } from '../auxiliares/token';
 import GerenteDeUsuario from '../database/models/GerenteDeUsuario';
 import RecomendacaoDeAtivo from '../database/models/RecomendacaoDeAtivo';
 import Usuario from '../database/models/Usuario';
+import AtivosDoUsuario from '../database/models/AtivosDoUsuario';
+import Ativo from '../database/models/Ativo';
 
 type IloginGerenteService = {email: string, senha: string}
 export const loginGerenteService = async ({ email, senha }: IloginGerenteService) => {
@@ -84,8 +86,27 @@ export const gerenciarUsuarioService = async (token: string, usuarioId: number) 
 export const usuariosDoGerenteService = async (token: string) => {
   const { id } = decodificaToken(token, true);
   const usuariosIds = await GerenteDeUsuario.findAll({ where: { gerenteId: id } });
-  const usuarios = usuariosIds.map(({ usuarioId }) => Usuario
-    .findOne({ where: { id: usuarioId }, attributes: { exclude: ['senha'] } }));
+
+  const usuarios = usuariosIds.map(async ({ usuarioId }) => {
+    const usuario = await Usuario.findOne({ where: { id: usuarioId }, attributes: { exclude: ['senha'] } });
+    if (usuario === null) return;
+    const ativosDoUsuario = await AtivosDoUsuario.findAll({ where: { usuarioId: usuario.id } });
+
+    const ativos = await Promise.all(ativosDoUsuario
+      .map(async ({ ativoId, quantidade, precoMedioDeCompra }) => {
+        const ativo = await Ativo.findOne({ where: { id: ativoId } });
+        return { ativo, quantidade, precoMedioDeCompra };
+      }));
+
+    return ({
+      id: usuario.id,
+      nome: usuario.nome,
+      sobrenome: usuario.sobrenome,
+      email: usuario.email,
+      ativos,
+    });
+  });
+
   return Promise.all(usuarios);
 };
 
@@ -94,6 +115,21 @@ export const usuariosDoGerentePeloIdService = async (token: string, usuarioId: n
   const relacaoUsuarioGerente = await GerenteDeUsuario
     .findOne({ where: { gerenteId: id, usuarioId } });
   if (relacaoUsuarioGerente === null) throw new ErroPersonalizado(400, 'Este usuario não é gerenciado por este gerente');
-  const usuarios = Usuario.findOne({ where: { id: usuarioId }, attributes: { exclude: ['senha'] } });
-  return usuarios;
+  const usuario = await Usuario.findOne({ where: { id: usuarioId }, attributes: { exclude: ['senha'] } });
+
+  const ativosDoUsuario = await AtivosDoUsuario.findAll({ where: { usuarioId: usuario?.id } });
+
+  const ativos = await Promise.all(ativosDoUsuario
+    .map(async ({ ativoId, quantidade, precoMedioDeCompra }) => {
+      const ativo = await Ativo.findOne({ where: { id: ativoId } });
+      return { ativo, quantidade, precoMedioDeCompra };
+    }));
+
+  return ({
+    id: usuario?.id,
+    nome: usuario?.nome,
+    sobrenome: usuario?.sobrenome,
+    email: usuario?.email,
+    ativos,
+  });
 };
