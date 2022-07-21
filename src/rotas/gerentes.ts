@@ -12,4 +12,7 @@ gerentes.get('/', pegarContaController);
 gerentes.post('/', validacaoConta, criarContaController);
 
 gerentes.put('/', validacaoEdicaoDeConta, criarContaController);
+
+gerentes.delete('/', deletarContaController);
+
 export default gerentes;

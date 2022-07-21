@@ -1,6 +1,8 @@
 import Gerente from '../database/models/Gerente';
 import ErroPersonalizado from '../auxiliares/ErroPersonalizado';
 import { criandoToken, decodificaToken } from '../auxiliares/token';
+import GerenteDeUsuario from '../database/models/GerenteDeUsuario';
+import RecomendacaoDeAtivo from '../database/models/RecomendacaoDeAtivo';
 
 type IloginGerenteService = {email: string, senha: string}
 export const loginGerenteService = async ({ email, senha }: IloginGerenteService) => {
@@ -57,4 +59,15 @@ export const editarContaService = async (
   };
   const novoToken = criandoToken(novoUsuario, false);
   return { token: novoToken };
+};
+
+export const deletarContaService = async (token: string) => {
+  const { id } = decodificaToken(token, true);
+  const gerente = await Gerente.findOne({ where: { id } });
+  if (gerente === null) throw new ErroPersonalizado(400, 'Gerente não encontrado');
+  const todosGerentes = await Gerente.findAll();
+  if (todosGerentes.length > 2) throw new ErroPersonalizado(422, 'Numero de gerentes insuficiente');
+  await GerenteDeUsuario.destroy({ where: { gerenteId: id } });
+  await RecomendacaoDeAtivo.destroy({ where: { gerenteId: id } });
+  await Gerente.destroy({ where: { gerenteId: id } });
 };
