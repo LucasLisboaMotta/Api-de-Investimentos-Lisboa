@@ -24,3 +24,23 @@ export const pegarContaService = async (token: string) => {
     id, nome: usuario.nome, sobrenome: usuario.sobrenome, email: usuario.email,
   };
 };
+
+type contaType = { nome: string, sobrenome: string, email: string, senha: string };
+export const criarContaService = async (
+  token: string,
+  {
+    nome, sobrenome, email, senha,
+  }: contaType,
+) => {
+  decodificaToken(token, true);
+  const verificaEmail = await Gerente.findOne({ where: { email } });
+  if (verificaEmail !== null) throw new ErroPersonalizado(400, 'Email já cadastrado');
+  const usuario = await Gerente.create({
+    nome, sobrenome, email, senha,
+  });
+  const novoGerente = {
+    id: usuario.id, nome, sobrenome, email,
+  };
+  const novoToken = criandoToken(novoGerente, false);
+  return { token: novoToken };
+};
