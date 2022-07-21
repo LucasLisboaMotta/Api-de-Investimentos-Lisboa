@@ -70,3 +70,18 @@ export const editarContaService = async (
   return { token: novoToken };
 };
 
+export const deletarContaService = async (token: string) => {
+  const { id } = decodificaToken(token, false);
+  const usuario = await Usuario.findOne({ where: { id } });
+  if (usuario === null) throw new ErroPersonalizado(400, 'Usuario não encontrado');
+  const conta = await ContaDoUsuario.findOne({ where: { usuarioId: id } });
+  if (Number(conta?.saldo) > 0) throw new ErroPersonalizado(400, 'Ainda existe valores na conta do usuario');
+  const ativos = await AtivosDoUsuario.findAll({ where: { usuarioId: id } });
+  if (ativos.length > 0) throw new ErroPersonalizado(400, 'Ainda existe ativos na conta do usuario');
+  await Usuario.destroy({ where: { id } });
+  await ContaDoUsuario.destroy({ where: { usuarioId: id } });
+  await AtivoFavorito.destroy({ where: { usuarioId: id } });
+  await GerenteDeUsuario.destroy({ where: { usuarioId: id } });
+  await HistoricoDeTransacaoBancaria.destroy({ where: { usuarioId: id } });
+  await HistoricoDeTransacaoDeAtivo.destroy({ where: { usuarioId: id } });
+};

@@ -15,4 +15,5 @@ contas.get('/', pegarContaController);
 contas.get('/historico', pegarHistoricoController);
 contas.post('/', validacaoConta, criarContaController);
 contas.put('/', validacaoEdicaoDeConta, editarContaController);
+contas.delete('/', deletarContaController);
 export default contas;
