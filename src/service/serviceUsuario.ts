@@ -25,3 +25,9 @@ export const pegarContaService = async (token: string) => {
     id, nome: usuario.nome, sobrenome: usuario.sobrenome, email: usuario.email, saldo: conta?.saldo,
   };
 };
+
+export const pegarHistoricoService = async (token: string) => {
+  const { id } = decodificaToken(token, false);
+  const historico = await HistoricoDeTransacaoBancaria.findAll({ where: { usuarioId: id } });
+  return historico;
+};
