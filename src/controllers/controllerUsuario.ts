@@ -49,3 +49,9 @@ export const depositoController = async (req: Request, res: Response) => {
   const resposta = await depositoService(token, req.body.valor);
   return res.status(200).json(resposta);
 };
+
+export const saqueController = async (req: Request, res: Response) => {
+  const token = req.headers.authorization as string;
+  const resposta = await saqueService(token, req.body.valor);
+  return res.status(200).json(resposta);
+};

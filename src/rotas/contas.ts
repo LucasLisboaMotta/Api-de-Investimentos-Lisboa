@@ -19,6 +19,7 @@ contas.get('/historico', pegarHistoricoController);
 
 contas.post('/', validacaoConta, criarContaController);
 contas.post('/deposito', validacaoTransacao, depositoController);
+contas.post('/saque', validacaoTransacao, saqueController);
 
 contas.put('/', validacaoEdicaoDeConta, editarContaController);
 

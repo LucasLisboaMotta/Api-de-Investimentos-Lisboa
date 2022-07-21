@@ -94,3 +94,13 @@ export const depositoService = async (token: string, valor: number) => {
   await operacoesBancarias(valor, 'Deposito', id);
   return { saldo };
 };
+
+export const saqueService = async (token: string, valor: number) => {
+  const { id } = decodificaToken(token, false);
+  const conta = await ContaDoUsuario.findOne({ where: { usuarioId: id } });
+  if (conta === null) throw new ErroPersonalizado(400, 'Usuario não encontrado');
+  if (Number(conta.saldo) < Number(valor)) throw new ErroPersonalizado(422, 'Saldo insuficiente');
+  const saldo = (Number(conta.saldo) - Number(valor)).toFixed(2);
+  await operacoesBancarias(valor * -1, 'Saque', id);
+  return { saldo };
+};
