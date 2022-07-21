@@ -26,3 +26,8 @@ export const pegarHistoricoController = async (req: Request, res: Response) => {
   const resposta = await pegarHistoricoService(token);
   return res.status(200).json(resposta);
 };
+
+export const criarContaController = async (req: Request, res: Response) => {
+  const token = await criarContaService(req.body);
+  return res.status(201).json(token);
+};
