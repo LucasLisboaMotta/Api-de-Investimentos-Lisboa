@@ -320,3 +320,125 @@ describe('Testando rotas "/conta"', () => {
     expect(message).toEqual('Token expirado ou invalido');
   });
 });
+
+describe('Testando transações nas rotas "/conta"', () => {
+  
+  beforeAll(async () => {
+    await shell.exec('npm run db:reset');
+  });
+
+
+  test('Testando rota post "/conta/deposito" com sucesso', async () => {
+    const { body: { token } } = await request(rotas).post('/login/usuario').send({
+      email: 'joaosilva@gmail.com',
+      senha: '12345678',
+    });
+    const { status, body: { saldo } } = await request(rotas).post('/conta/deposito').send({
+      valor: '1000.00'
+    }).set({ Authorization: token });
+    
+    expect(status).toEqual(200);
+    expect(saldo).toEqual('1300.50');
+
+    const conta = await ContaDoUsuario.findOne({ where: { usuarioId: 1 } });
+    expect(conta?.saldo).toEqual('1300.50');
+
+    const historico = await HistoricoDeTransacaoBancaria.findOne({ where: { id: 25 } });
+    expect(historico?.valor).toEqual('1000.00');
+    expect(historico?.tipo).toEqual('Deposito');
+    expect(historico?.usuarioId).toEqual(1);
+  
+  });
+
+  test('Testando rota post "/conta/deposito" com falha no valor', async () => {
+    const { body: { token } } = await request(rotas).post('/login/usuario').send({
+      email: 'joaosilva@gmail.com',
+      senha: '12345678',
+    });
+    const { status, body: { message } } = await request(rotas).post('/conta/deposito').set({ Authorization: token });
+
+    expect(status).toEqual(400);
+    expect(message).toEqual('O campo "valor" é obrigatorio');
+
+    const { status: status2, body: { message: message2 } } = await request(rotas).post('/conta/deposito').send({
+      valor: '-1000.00'
+    }).set({ Authorization: token });
+
+    expect(status2).toEqual(400);
+    expect(message2).toEqual('O campo "valor" esta invalido')
+  });
+
+  test('Testando rota post "/conta/deposito" com falha no token', async () => {
+    const token = '123456467';
+    const { status, body: { message } } = await request(rotas).post('/conta/deposito').send({
+      valor: '1000.00'
+    }).set({ Authorization: token });
+
+    expect(status).toEqual(401);
+    expect(message).toEqual('Token expirado ou invalido');
+  });
+
+
+
+  test('Testando rota post "/conta/saque" com sucesso', async () => {
+    const { body: { token } } = await request(rotas).post('/login/usuario').send({
+      email: 'mariaoliveira@yahoo.com.br',
+      senha: '87654321',
+    });
+    const { status, body: { saldo } } = await request(rotas).post('/conta/saque').send({
+      valor: '1000.00'
+    }).set({ Authorization: token });
+    
+    expect(status).toEqual(200);
+    expect(saldo).toEqual('1000.10');
+
+    const conta = await ContaDoUsuario.findOne({ where: { usuarioId: 2 } });
+    expect(conta?.saldo).toEqual('1000.10');
+
+    const historico = await HistoricoDeTransacaoBancaria.findOne({ where: { id: 26 } });
+    expect(historico?.valor).toEqual('1000.00');
+    expect(historico?.tipo).toEqual('Saque');
+    expect(historico?.usuarioId).toEqual(2);  
+  });
+
+  test('Testando rota post "/conta/saque" com falha no saldo', async () => {
+    const { body: { token } } = await request(rotas).post('/login/usuario').send({
+      email: 'joaosilva@gmail.com',
+      senha: '12345678',
+    });
+    const { status, body: { message } } = await request(rotas).post('/conta/saque').send({
+      valor: '10000.00'
+    }).set({ Authorization: token });
+
+    expect(status).toEqual(422);
+    expect(message).toEqual('Saldo insuficiente');
+  });
+
+  test('Testando rota post "/conta/saque" com falha no valor', async () => {
+    const { body: { token } } = await request(rotas).post('/login/usuario').send({
+      email: 'joaosilva@gmail.com',
+      senha: '12345678',
+    });
+    const { status, body: { message } } = await request(rotas).post('/conta/saque').set({ Authorization: token });
+
+    expect(status).toEqual(400);
+    expect(message).toEqual('O campo "valor" é obrigatorio');
+
+    const { status: status2, body: { message: message2 } } = await request(rotas).post('/conta/saque').send({
+      valor: '-1000.00'
+    }).set({ Authorization: token });
+
+    expect(status2).toEqual(400);
+    expect(message2).toEqual('O campo "valor" esta invalido')
+  });
+
+  test('Testando rota post "/conta/saque" com falha no token', async () => {
+    const token = '123456467';
+    const { status, body: { message } } = await request(rotas).post('/conta/saque').send({
+      valor: '1000.00'
+    }).set({ Authorization: token });
+
+    expect(status).toEqual(401);
+    expect(message).toEqual('Token expirado ou invalido');
+  });
+});
