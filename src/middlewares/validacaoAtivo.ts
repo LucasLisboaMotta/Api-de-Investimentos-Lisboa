@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import ErroPersonalizado from '../auxiliares/ErroPersonalizado';
 
-const login = Joi.object().keys({
+const ativo = Joi.object().keys({
   sigla: Joi.string().min(5).max(6).required()
     .messages({
       'string.min': 'O campo "sigla" deve ter de 5 a 6 caracteres',
@@ -30,7 +30,7 @@ const login = Joi.object().keys({
 
 const validacaoAtivos = (req: Request, _res: Response, next: NextFunction) => {
   req.body.valor = Number(req.body.valor);
-  const { error } = login.validate(req.body);
+  const { error } = ativo.validate(req.body);
   if (error) throw new ErroPersonalizado(400, error.message);
   req.body.sigla = req.body.sigla.toUpperCase();
   req.body.valor = req.body.valor.toFixed(2);

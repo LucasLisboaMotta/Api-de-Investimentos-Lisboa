@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { NextFunction, Request, Response } from 'express';
 import ErroPersonalizado from '../auxiliares/ErroPersonalizado';
 
-const login = Joi.object().keys({
+const investimentos = Joi.object().keys({
   codAtivo: Joi.number().min(1).integer().required()
     .messages({
       'number.min': 'O "codAtivo" esta inválido',
@@ -18,7 +18,7 @@ const login = Joi.object().keys({
 });
 
 const validacaoInvestimentos = (req: Request, _res: Response, next: NextFunction) => {
-  const { error } = login.validate(req.body);
+  const { error } = investimentos.validate(req.body);
   if (error) throw new ErroPersonalizado(400, error.message);
   return next();
 };
