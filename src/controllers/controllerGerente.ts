@@ -36,3 +36,10 @@ export const deletarContaController = async (req: Request, res: Response) => {
   await deletarContaService(token);
   return res.status(200).end();
 };
+
+export const gerenciarUsuarioController = async (req: Request, res: Response) => {
+  const token = req.headers.authorization as string;
+  const id = Number(req.params.id);
+  await gerenciarUsuarioService(token, id);
+  return res.status(200).end();
+};

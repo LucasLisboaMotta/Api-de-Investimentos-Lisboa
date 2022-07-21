@@ -71,3 +71,11 @@ export const deletarContaService = async (token: string) => {
   await RecomendacaoDeAtivo.destroy({ where: { gerenteId: id } });
   await Gerente.destroy({ where: { gerenteId: id } });
 };
+
+export const gerenciarUsuarioService = async (token: string, usuarioId: number) => {
+  const { id } = decodificaToken(token, true);
+  const gerenteUsuario = await GerenteDeUsuario.findOne({ where: { usuarioId } });
+  if (gerenteUsuario !== null && gerenteUsuario.gerenteId !== id) throw new ErroPersonalizado(400, 'Usuario já possui um gerente');
+  if (gerenteUsuario === null) await GerenteDeUsuario.create({ gerenteId: id, usuarioId });
+  else await GerenteDeUsuario.destroy({ where: { gerenteId: id, usuarioId } });
+};
