@@ -85,3 +85,12 @@ export const deletarContaService = async (token: string) => {
   await HistoricoDeTransacaoBancaria.destroy({ where: { usuarioId: id } });
   await HistoricoDeTransacaoDeAtivo.destroy({ where: { usuarioId: id } });
 };
+
+export const depositoService = async (token: string, valor: number) => {
+  const { id } = decodificaToken(token, false);
+  const conta = await ContaDoUsuario.findOne({ where: { usuarioId: id } });
+  if (conta === null) throw new ErroPersonalizado(400, 'Usuario não encontrado');
+  const saldo = (Number(valor) + Number(conta.saldo)).toFixed(2);
+  await operacoesBancarias(valor, 'Deposito', id);
+  return { saldo };
+};

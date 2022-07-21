@@ -43,3 +43,9 @@ export const deletarContaController = async (req: Request, res: Response) => {
   await deletarContaService(token);
   return res.status(200).end();
 };
+
+export const depositoController = async (req: Request, res: Response) => {
+  const token = req.headers.authorization as string;
+  const resposta = await depositoService(token, req.body.valor);
+  return res.status(200).json(resposta);
+};
