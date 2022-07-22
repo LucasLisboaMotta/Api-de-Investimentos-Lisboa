@@ -54,11 +54,18 @@ export const atualizarAtivoService = async (token: string, id: number, ativo: at
 };
 
 export const ativosRecomendadosService = async (token: string) => {
-  const usuario = decodificaToken(token, false);
-  const gerente = await GerenteDeUsuario.findOne({ where: { usuarioId: usuario.id } });
-  if (gerente === null) throw new ErroPersonalizado(400, 'Usuario não possui nenhum gerente');
+  let gerente: number;
+  try {
+    const { id } = decodificaToken(token, true);
+    gerente = id;
+  } catch {
+    const { id } = decodificaToken(token, false);
+    const gerenteDoUsuario = await GerenteDeUsuario.findOne({ where: { usuarioId: id } });
+    if (gerenteDoUsuario === null) throw new ErroPersonalizado(400, 'Usuario não possui nenhum gerente');
+    gerente = gerenteDoUsuario.gerenteId;
+  }
   const recomendados = await RecomendacaoDeAtivo
-    .findAll({ where: { gerenteId: gerente.gerenteId } });
+    .findAll({ where: { gerenteId: gerente } });
   const recomendacoesDeAtivos = await Promise.all(recomendados.map(async ({ ativoId, nota }) => {
     const ativo = await Ativo.findOne({ where: { id: ativoId } });
     return {
