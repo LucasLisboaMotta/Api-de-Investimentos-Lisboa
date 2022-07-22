@@ -69,10 +69,10 @@ export const deletarContaService = async (token: string) => {
   const gerente = await Gerente.findOne({ where: { id } });
   if (gerente === null) throw new ErroPersonalizado(400, 'Gerente não encontrado');
   const todosGerentes = await Gerente.findAll();
-  if (todosGerentes.length > 2) throw new ErroPersonalizado(422, 'Numero de gerentes insuficiente');
+  if (todosGerentes.length < 2) throw new ErroPersonalizado(422, 'Numero de gerentes insuficiente');
   await GerenteDeUsuario.destroy({ where: { gerenteId: id } });
   await RecomendacaoDeAtivo.destroy({ where: { gerenteId: id } });
-  await Gerente.destroy({ where: { gerenteId: id } });
+  await Gerente.destroy({ where: { id } });
 };
 
 export const gerenciarUsuarioService = async (token: string, usuarioId: number) => {
