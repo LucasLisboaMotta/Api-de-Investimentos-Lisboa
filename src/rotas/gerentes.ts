@@ -3,6 +3,7 @@ import express from 'express';
 import {
   criarContaController,
   deletarContaController,
+  editarContaController,
   gerenciarUsuarioController,
   pegarContaController,
   usuariosDoGerenteController,
@@ -21,7 +22,7 @@ gerentes.get('/conta/:id', usuariosDoGerentePeloIdController);
 gerentes.post('/', validacaoConta, criarContaController);
 gerentes.post('/usuario/:id', gerenciarUsuarioController);
 
-gerentes.put('/', validacaoEdicaoDeConta, criarContaController);
+gerentes.put('/', validacaoEdicaoDeConta, editarContaController);
 
 gerentes.delete('/', deletarContaController);
 
