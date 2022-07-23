@@ -5,6 +5,7 @@ import { decode } from 'jsonwebtoken';
 import Gerente from '../src/database/models/Gerente';
 import GerenteDeUsuario from '../src/database/models/GerenteDeUsuario';
 import RecomendacaoDeAtivo from '../src/database/models/RecomendacaoDeAtivo';
+import usuarioAtivo from './auxiliares/usuarioAtivo';
 
 describe('Testando rotas "/gerente"', () => {
   beforeAll(async () => {
@@ -342,7 +343,7 @@ describe('Testando rotas "/gerente"', () => {
 
 
 
-describe.only('Testando rotas "/gerente"', () => {
+describe('Testando rotas "/gerente"', () => {
   beforeAll(async () => {
     await shell.exec('npm run db:reset');
   });
@@ -387,6 +388,79 @@ describe.only('Testando rotas "/gerente"', () => {
     expect(status).toEqual(401);
     expect(message).toEqual('Token expirado ou invalido');
   });
-
-  
 });
+
+
+describe('Testando rotas "/gerente"', () => {
+  beforeAll(async () => {
+    await shell.exec('npm run db:reset');
+  });
+
+  test('Testando post "/gerente/conta" com sucesso', async () => {
+    const { body: { token } } = await request(rotas).post('/login/gerente').send({
+      email: 'carlossouza@ig.com',
+      senha: '90908080',
+    });
+
+    const { status, body } = await request(rotas).get('/gerente/conta').set({ Authorization: token });
+    expect(status).toEqual(200);
+    usuarioAtivo.forEach(({ id, nome, sobrenome, email, ativos }, index) => {
+      expect(body[index].id).toEqual(id);
+      expect(body[index].nome).toEqual(nome);
+      expect(body[index].sobrenome).toEqual(sobrenome);
+      expect(body[index].email).toEqual(email);
+      expect(body[index].ativos).toEqual(ativos);
+    });
+  });
+    
+
+  test('Testando post "/gerente/conta" com falha no token', async () => {
+    const { body: { token } } = await request(rotas).post('/login/usuario').send({
+      email: 'joaosilva@gmail.com',
+      senha: '12345678',
+    });
+
+    const { status, body: { message } } = await request(rotas).get('/gerente/conta').set({ Authorization: token });
+    expect(status).toEqual(401); 
+    expect(message).toEqual('Token expirado ou invalido')
+  });
+
+  test('Testando post "/gerente/conta" com sucesso', async () => {
+    const { body: { token } } = await request(rotas).post('/login/gerente').send({
+      email: 'carlossouza@ig.com',
+      senha: '90908080',
+    });
+
+    const { status, body } = await request(rotas).get('/gerente/conta/2').set({ Authorization: token });
+    expect(status).toEqual(200);
+    expect(body.id).toEqual(usuarioAtivo[0].id);
+    expect(body.nome).toEqual(usuarioAtivo[0].nome);
+    expect(body.sobrenome).toEqual(usuarioAtivo[0].sobrenome);
+    expect(body.email).toEqual(usuarioAtivo[0].email);
+    expect(body.ativos).toEqual(usuarioAtivo[0].ativos);
+  });
+    
+
+  test('Testando post "/gerente/conta" com falha no token', async () => {
+    const { body: { token } } = await request(rotas).post('/login/usuario').send({
+      email: 'joaosilva@gmail.com',
+      senha: '12345678',
+    });
+
+    const { status, body: { message } } = await request(rotas).get('/gerente/conta/2').set({ Authorization: token });
+    expect(status).toEqual(401); 
+    expect(message).toEqual('Token expirado ou invalido')
+  });
+
+  test('Testando post "/gerente/conta" com sucesso', async () => {
+    const { body: { token } } = await request(rotas).post('/login/gerente').send({
+      email: 'carlossouza@ig.com',
+      senha: '90908080',
+    });
+
+    const { status, body: { message } } = await request(rotas).get('/gerente/conta/1').set({ Authorization: token });
+    expect(status).toEqual(400);
+    expect(message).toEqual('Este usuario não é gerenciado por este gerente');
+  });
+})
+

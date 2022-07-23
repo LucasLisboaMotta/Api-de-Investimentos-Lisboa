@@ -288,7 +288,7 @@ describe('Testando rota post "/investimentos/vender"', () => {
       email: 'mariaoliveira@yahoo.com.br',
       senha: '87654321',
     });      
-    const {status, body: { message }} = await request(rotas).post('/investimentos/vender').send({
+    const { status, body: { message } } = await request(rotas).post('/investimentos/vender').send({
       codAtivo: 1,
       qtdeAtivo: 200
       }).set({ Authorization: token });
