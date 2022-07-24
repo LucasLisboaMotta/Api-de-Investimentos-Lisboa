@@ -348,14 +348,14 @@ describe('Testando rotas "/gerente"', () => {
     await shell.exec('npm run db:reset');
   });
 
-  test('Testando post "/gerente/usuario/:id" com sucesso', async () => {
+  test('Testando post "/gerente/conta/:id" com sucesso', async () => {
     const { body: { token } } = await request(rotas).post('/login/gerente').send({
       email: 'carlossouza@ig.com',
       senha: '90908080',
     });
 
-    const { status } = await request(rotas).post('/gerente/usuario/4').set({ Authorization: token });
-    const { status: status2 } = await request(rotas).post('/gerente/usuario/5').set({ Authorization: token });
+    const { status } = await request(rotas).post('/gerente/conta/4').set({ Authorization: token });
+    const { status: status2 } = await request(rotas).post('/gerente/conta/5').set({ Authorization: token });
 
     expect(status).toEqual(200);
     expect(status2).toEqual(200);
@@ -367,24 +367,24 @@ describe('Testando rotas "/gerente"', () => {
     expect(usuario2).not.toEqual(null);
   });
 
-  test('Testando post "/gerente/usuario/:id" com falha, ususario ja possui gerente', async () => {
+  test('Testando post "/gerente/conta/:id" com falha, ususario ja possui gerente', async () => {
     const { body: { token } } = await request(rotas).post('/login/gerente').send({
       email: 'carlossouza@ig.com',
       senha: '90908080',
     });
   
-    const { status, body: { message } } = await request(rotas).post('/gerente/usuario/1').set({ Authorization: token });
+    const { status, body: { message } } = await request(rotas).post('/gerente/conta/1').set({ Authorization: token });
     expect(status).toEqual(400);
     expect(message).toEqual('Usuario já possui um gerente');
   });
 
-  test('Testando post "/gerente/usuario/:id" com falha no token', async () => {
+  test('Testando post "/gerente/conta/:id" com falha no token', async () => {
     const { body: { token } } = await request(rotas).post('/login/usuario').send({
       email: 'joaosilva@gmail.com',
       senha: '12345678',
     });
   
-    const { status, body: { message } } = await request(rotas).post('/gerente/usuario/1').set({ Authorization: token });
+    const { status, body: { message } } = await request(rotas).post('/gerente/conta/1').set({ Authorization: token });
     expect(status).toEqual(401);
     expect(message).toEqual('Token expirado ou invalido');
   });

@@ -20,7 +20,7 @@ gerentes.get('/conta', usuariosDoGerenteController);
 gerentes.get('/conta/:id', usuariosDoGerentePeloIdController);
 
 gerentes.post('/', validacaoConta, criarContaController);
-gerentes.post('/usuario/:id', gerenciarUsuarioController);
+gerentes.post('/conta/:id', gerenciarUsuarioController);
 
 gerentes.put('/', validacaoEdicaoDeConta, editarContaController);
 
