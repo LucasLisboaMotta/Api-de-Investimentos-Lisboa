@@ -128,12 +128,13 @@ describe('Testando rotas "/ativos"', () => {
 
     const {status, body} = await request(rotas).get('/ativos/recomendados').set({ Authorization: token });
       expect(status).toEqual(200);
-      recomendados.forEach(({ id, sigla, nome, quantidade, valor}, index) => {
+      recomendados.forEach(({ id, sigla, nome, quantidade, valor, nota}, index) => {
         expect(body[index].id).toEqual(id);
         expect(body[index].sigla).toEqual(sigla);
         expect(body[index].nome).toEqual(nome);
         expect(body[index].quantidade).toEqual(quantidade);
         expect(body[index].valor).toEqual(valor);
+        expect(body[index].nota).toEqual(nota);
       })
    });
 
