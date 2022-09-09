@@ -6,10 +6,6 @@ Este projeto foi feito em 10 dias,  e utilizado como principal ferramenta de des
 
 Meu objetivo era criar uma API dinâmica,  que apenas pelas rotas da API seja possível manipular todos os dados da aplicação.
 
-Caso queira testar a API, ela já está no ar neste <a href="https://apideinvestimentoslisboa.herokuapp.com/">Link</a>.
-Nela estou utilizando o Heroku,
-as aplicações da Heroku costumam entrar em hibernação apos um longo tempo sem serem utilizadas. Então sua primeira requisição pode demorar um pouco
-
 O que eu mais gostei no projeto foi ter tido a oportunidade de construir uma API do zero, decidindo o que era necessário e o que era dispensável durante o desenvolvimento. 
 <details>
   <summary><strong>Tecnologias utilizadas</strong></summary><br />
